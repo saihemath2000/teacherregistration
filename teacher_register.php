@@ -285,7 +285,7 @@
                 .attr("name", "files"+numOfInputs+"[]")
                 .insertAfter("#files"+(numOfInputs-1));
     
-            $("<br/>").insertBefore("#files"+numOfInputs);
+            // $("<br/>").insertBefore("#files"+numOfInputs);
             $('#files'+(numOfInputs-1)).hide();
         });
     });
