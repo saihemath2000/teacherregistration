@@ -28,28 +28,46 @@ function register()
     $phone = e($_POST['phone']);
     $address = e($_POST['address']);
     $degree = e($_POST['degree']);
-    // $board = e($_POST['board']);
     $institute = e($_POST['institute']);
-    // $yearofpassing = e($_POST['yearofpassing']);
-    // $percentage = e($_POST['percentage']);
     $department = e($_POST['department']);
     $experience = e($_POST['experience']);
     $skills = e($_POST['skills']);
-    $file = $_FILES['file']['name'];
-    $tmp_file = $_FILES['file']['tmp_name'];
     $photo = $_FILES['profilephoto']['name'];
     $tmp_name = $_FILES['profilephoto']['tmp_name'];
     $video = $_FILES['video']['name'];
     $tmp_video = $_FILES['video']['tmp_name'];
-    $totalfiles = count($_FILES['file']['name']);
     $string='';
-    for ($i = 0; $i < $totalfiles; $i++) {
-        $filename = $_FILES['file']['name'][$i];
-        $string=$string.':'.$filename; 
-        if (move_uploaded_file($_FILES["file"]["tmp_name"][$i], 'skilldocuments/' . $filename)) {
-            //echo 'uploaded;
-        }
+    $files = array();
+    $files = $_FILES['files0'];
+    foreach($_FILES['files0']['name'] as $m=>$n){
+        if (move_uploaded_file($_FILES['files0']['tmp_name'][$m],'skilldocuments/' . $n)) {
+            //  echo 'uploaded';
+        } 
     }
+    $browserIterator = 1;
+    while(isset($_FILES['files'.$browserIterator])) {
+        //Files have same attribute structure, so grab each attribute and append data for each attribute from each file
+        foreach($_FILES['files'.$browserIterator] as $attr => $values) {//get each attribute
+            foreach($_FILES['files'.$browserIterator][$attr] as $fileValue){//get each value from attribute
+                $files[$attr][] = $fileValue;//append value
+            }
+        }
+        foreach($_FILES['files'.$browserIterator]['name'] as $m=>$n){
+            if (move_uploaded_file($_FILES['files'.$browserIterator]['tmp_name'][$m],'skilldocuments/' . $n)) {
+                //  echo $browserIterator;
+            } 
+        }
+        $browserIterator++;
+    }
+    //Use $files like you would use $_FILES['browser'] -- It is as though all files came from one browser button!
+    $fileIterator = 0;
+    // echo count($files['name']);
+    while($fileIterator < count($files['name'])) {
+        $string = $string.':'.$files['name'][$fileIterator];
+        // echo $files['name'][$fileIterator]."<br/>";
+        $fileIterator++;
+    }
+    // echo $string;
     if (isset($video)) {
         if (move_uploaded_file($tmp_video, 'video/' . $video)) {
             // echo 'uploaded';
@@ -100,7 +118,7 @@ function register()
             $query = "INSERT INTO teachers (name, email, password,phone,address,photo,degree,institute,department,experience,skills,skilldocuments,video,created_at)
 					VALUES('$name', '$email', '$password', '$phone','$address','$photo','$degree','$institute','$department','$experience','$skills','$string','$video','$current_date')";
             if(!mysqli_query($db, $query)){
-                echo mysqli_error($db);
+                    echo mysqli_error($db);
             }    
             $_SESSION['success'] = "successfully registered";
             // echo 'completed';
@@ -109,7 +127,7 @@ function register()
     }
 }
 
-// return user array from their id
+ // return user array from their id
 function getUserById($id)
 {
     global $db;
@@ -120,15 +138,14 @@ function getUserById($id)
     return $user;
 }
 
-// escape string
+ // escape string
 function e($val)
 {
     global $db;
     return mysqli_real_escape_string($db, trim($val));
 }
 
-function display_error()
-{
+ function display_error(){
     global $errors;
 
     if (count($errors) > 0) {
@@ -147,7 +164,6 @@ function isLoggedIn()
         return false;
     }
 }
-// log user out if logout button clicked
 if (isset($_GET['logout'])) {
     session_destroy();
     unset($_SESSION['user']);

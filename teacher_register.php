@@ -23,6 +23,7 @@
       rel="stylesheet"
       media="all"
     />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>           
     <!-- Font special for pages-->
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"
@@ -213,13 +214,15 @@
                   <input
                     type="file"
                     class="form-control-file"
-                    id="exampleFormControlFile1"
-                    name="file[]"
+                    id="files0"
+                    name="files0[]"
                     style="font-size:18px"
                     multiple
                   />
                 </div>
               </div>
+              <span style="font-size: 10pt;">Click "+" for more files
+            <a><i id="more_files" class='fa fa-plus'></i></a></span>
               <div class="form-row">
                 <div class="form-group">
                   <div id="asterik" style="  font-family:Open Sans, Arial, Helvetica Neue, sans-serif;padding:0;margin: 0;box-sizing: inherit;color: #555;font-weight: 700;display: block;width: 100%;margin-bottom: 7px;font-size: 18px;">Video about what you want to do</div>
@@ -249,6 +252,7 @@
 
     <!-- Main JS-->
     <script src="js/global.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
     <script>
       const togglePassword = document.querySelector('#togglePassword');
       const password = document.querySelector('#id_password');
@@ -268,6 +272,23 @@
         // toggle the eye slash icon
         this.classList.toggle('fa-eye-slash');
       });
+    </script>
+    <script type="text/javascript">   
+    $(document).ready(function() {
+        $(document).on('click','#more_files', function() {
+            var numOfInputs = 1;
+            while($('#files'+numOfInputs).length) { numOfInputs++; }//once this loop breaks, numOfInputs is greater than the # of browse buttons
+    
+            $("<input type='file' multiple/>")
+                .attr("style","font-size:18px;")
+                .attr("id", "files"+numOfInputs)
+                .attr("name", "files"+numOfInputs+"[]")
+                .insertAfter("#files"+(numOfInputs-1));
+    
+            $("<br/>").insertBefore("#files"+numOfInputs);
+            $('#files'+(numOfInputs-1)).hide();
+        });
+    });
     </script>
   </body>
   <!-- This templates was made by Colorlib (https://colorlib.com) -->
