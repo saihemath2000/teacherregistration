@@ -233,7 +233,7 @@
                 </div>
               </div>
               <button class="btn btn--radius-2 btn--red" type="submit" name="register"
-              style="">Register</button>
+              >Register</button>
             </form>
           </div>
         </div>
